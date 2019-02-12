@@ -1,0 +1,20 @@
+{
+  "name": "arch-backend",
+  "version": "1.0.0",
+  "description": "talk to websites to pull images",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node_modules/.bin/tsc && node build/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.16.0",
+    "@types/node": "^10.12.14",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "image-scraper": "^0.2.1",
+    "typescript": "^3.2.2"
+  }
+}
