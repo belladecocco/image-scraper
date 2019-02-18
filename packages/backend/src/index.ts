@@ -1,30 +1,46 @@
 import express from "express";
-import { CLIENT_RENEG_WINDOW } from "tls";
+import { watchFile } from "fs";
 const app = express();
 const puppeteer = require("puppeteer");
 const cors = require("cors");
 app.use(cors());
 
-let window: any;
-const imgArr: any[] = [];
-
-(async () => {
-    const browser = await puppeteer.launch();
+const fetchImages = async (URL: any) => {
+  try {
+    const browser = await puppeteer.launch({ headless: false, slowMo: 250 });
     const page = await browser.newPage();
 
-    await page.goto('https://githuhttps://www.archdaily.com/category/galleryb.com');
-    await page.evaluate( async () => {
-        await window.scrollBy(0, window.innerHeight);
-        window.on("image", (image: any) => {
-            if(imgArr.includes(image.address) === false) {
-                imgArr.push(image.address);
-            }
-        });
+    await page.goto(URL, { waitUntil: "networkidle2" });
 
+    await page.keyboard.press("Escape");
+
+    const imageData = await page.evaluate(() => {
+      return new Promise((resolve, reject) => {
+        let totalHeight = 0;
+        let distance = 100;
+        let timer = setInterval(() => {
+          let scrollHeight = document.body.scrollHeight;
+          window.scrollBy(0, distance);
+          totalHeight += distance;
+          if (totalHeight >= scrollHeight) {
+            clearInterval(timer);
+            const imgArr = Array.from(document.images);
+            const srcArr = imgArr.map(img => img.src);
+            resolve(srcArr);
+          }
+        }, 100);
+      });
     });
-
     browser.close();
-    return imgArr;
-})();
+    return imageData;
+  } catch (err) {
+    console.log(err);
+  }
+};
+app.get("/:URL", async (req, res) => {
+  const URL = decodeURIComponent(req.params.URL);
+  const data = await fetchImages(URL);
+  res.send(data);
+});
 
 app.listen(8000);
