@@ -7,7 +7,7 @@ app.use(cors());
 
 const fetchImages = async (URL: any) => {
   try {
-    const browser = await puppeteer.launch({ headless: false, slowMo: 250 });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
     await page.goto(URL, { waitUntil: "networkidle2" });
@@ -17,7 +17,7 @@ const fetchImages = async (URL: any) => {
     const imageData = await page.evaluate(() => {
       return new Promise((resolve, reject) => {
         let totalHeight = 0;
-        let distance = 100;
+        let distance = 250;
         let timer = setInterval(() => {
           let scrollHeight = document.body.scrollHeight;
           window.scrollBy(0, distance);
@@ -25,12 +25,13 @@ const fetchImages = async (URL: any) => {
           if (totalHeight >= scrollHeight) {
             clearInterval(timer);
             const imgArr = Array.from(document.images);
-            const srcArr = imgArr.map(img => img.src);
+            const srcArr = imgArr.map(img => ({src: img.src, srcSet: img.srcset}));
             resolve(srcArr);
           }
-        }, 100);
+        }, 50);
       });
     });
+
     browser.close();
     return imageData;
   } catch (err) {

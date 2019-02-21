@@ -50,7 +50,7 @@ var fetchImages = function (URL) { return __awaiter(_this, void 0, void 0, funct
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 6, , 7]);
-                return [4 /*yield*/, puppeteer.launch({ headless: false, slowMo: 250 })];
+                return [4 /*yield*/, puppeteer.launch({ headless: true })];
             case 1:
                 browser = _a.sent();
                 return [4 /*yield*/, browser.newPage()];
@@ -65,7 +65,7 @@ var fetchImages = function (URL) { return __awaiter(_this, void 0, void 0, funct
                 return [4 /*yield*/, page.evaluate(function () {
                         return new Promise(function (resolve, reject) {
                             var totalHeight = 0;
-                            var distance = 100;
+                            var distance = 250;
                             var timer = setInterval(function () {
                                 var scrollHeight = document.body.scrollHeight;
                                 window.scrollBy(0, distance);
@@ -73,10 +73,10 @@ var fetchImages = function (URL) { return __awaiter(_this, void 0, void 0, funct
                                 if (totalHeight >= scrollHeight) {
                                     clearInterval(timer);
                                     var imgArr = Array.from(document.images);
-                                    var srcArr = imgArr.map(function (img) { return img.src; });
+                                    var srcArr = imgArr.map(function (img) { return ({ src: img.src, srcSet: img.srcset }); });
                                     resolve(srcArr);
                                 }
-                            }, 100);
+                            }, 50);
                         });
                     })];
             case 5:
