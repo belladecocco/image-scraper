@@ -17,4 +17,4 @@
   * change `headless` to `false` if you would like to see Chromium activity (i.e. website scrolling to load images) in [index.ts](https://github.com/belladecocco/image-scraper/blob/master/packages/backend/src/index.ts)
   `const browser = await puppeteer.launch({ headless: true });`
   ## to use backend
-  ### GET `/:URL` where URL is encoded
+  GET `/:URL` where URL is encoded
