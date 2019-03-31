@@ -18,3 +18,14 @@
   `const browser = await puppeteer.launch({ headless: true });`
   ## to use backend
   GET `/:URL` where URL is encoded
+  ## next steps
+  * build feature to pass in a list of urls to eliminate hard coding
+  * build out use cases for collecting the images such as:
+    * combining multiple instagram pages' images
+    * saving favorite url lists
+    * creating inspiration boards
+    * going to links onClick
+    * sending link to image collection
+    * saving favorite images to database
+    * displaying favorite images
+

@@ -21,22 +21,15 @@ class App extends Component<Props, State> {
 
   async componentDidMount() {
     try {
-      let results = await Promise.all(
-        this.urls.map(async url => {
-          let arr = await fetch(
-            `http://localhost:8000/${encodeURIComponent(url)}`
-          );
-          return arr.json() as Promise<Array<Picture>>;
-        })
-      );
-      for (let result of results) {
-        const visiblePictures = result.map(r =>
-          Object.assign(r, { visible: true })
-        );
-        await this.setState({
-          pictures: this.state.pictures.concat(visiblePictures)
-        });
-      }
+      const encodedUrls = this.urls.map(url => encodeURIComponent(url));
+      let results1 = await fetch(`http://localhost:8000/${encodedUrls}`);
+      let results2 = await results1.json() as Array<Picture>;
+      for (let result of results2) {
+            Object.assign(result, { visible: true });
+        }
+      await this.setState({
+        pictures: results2
+      });
     } catch (err) {
       console.log(err);
     }

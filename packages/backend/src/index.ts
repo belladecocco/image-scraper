@@ -1,24 +1,23 @@
 import express from 'express';
 import { watchFile } from 'fs';
 const app = express();
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer';
 const cors = require('cors');
 app.use(cors());
 
-const fetchImages = async (URL: any) => {
+const fetchImages = async (URL: string) => {
   try {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     await page.goto(URL, { waitUntil: 'networkidle2' });
-
     await page.keyboard.press('Escape');
     const escapeTimer = setInterval(() => {
       page.keyboard.press('Escape');
     }, 500);
 
     const imageData = await page.evaluate(() => {
-      return new Promise((resolve, reject) => {
+      return new Promise<Array<{src: string, srcSet: string}>>((resolve, reject) => {
         let totalHeight = 0;
         let distance = 250;
         let scrollTimer = setInterval(() => {
@@ -42,11 +41,13 @@ const fetchImages = async (URL: any) => {
     return imageData;
   } catch (err) {
     console.log(err);
+    return [];
   }
 };
-app.get('/:URL', async (req, res) => {
-  const URL = decodeURIComponent(req.params.URL);
-  const data = await fetchImages(URL);
+app.get('/:URLSARR', async (req, res) => {
+  const urls: Array<string> = req.params.URLSARR.split(",");
+  const dataArr = await Promise.all(urls.map((url: string) => fetchImages(url)));
+  const data = dataArr.reduce( (acc, siteImgs) =>  acc.concat(siteImgs), []);
   res.send(data);
 });
 
