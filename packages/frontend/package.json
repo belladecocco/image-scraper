@@ -10,7 +10,6 @@
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1",
-    "request": "^2.88.0",
     "typescript": "^3.2.2"
   },
   "scripts": {

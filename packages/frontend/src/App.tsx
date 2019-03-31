@@ -1,10 +1,5 @@
-import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import "./imageGrid.css";
-import { async } from "q";
+import React, { Component } from 'react';
 
-var request = require("request");
 interface Props {}
 interface Picture {
   src: string;
@@ -18,10 +13,10 @@ class App extends Component<Props, State> {
   state = { pictures: new Array<Picture>() };
 
   urls = [
-    "https://www.nationalgeographic.com/",
-    "https://www.architecturaldigest.com/",
-    "https://www.bonappetit.com/",
-    "https://www.nationalgeographic.com/content/dam/ngdotcom/rights-exempt/MonetateTests/EmailBackgrounds/MossForest.jpg"
+    'https://www.instagram.com/lulusketches/',
+    'https://www.nationalgeographic.com/',
+    'https://www.architecturaldigest.com/',
+    'https://www.bonappetit.com/'
   ];
 
   async componentDidMount() {
@@ -35,7 +30,9 @@ class App extends Component<Props, State> {
         })
       );
       for (let result of results) {
-        const visiblePictures = result.map(r => Object.assign(r, {visible: true}))
+        const visiblePictures = result.map(r =>
+          Object.assign(r, { visible: true })
+        );
         await this.setState({
           pictures: this.state.pictures.concat(visiblePictures)
         });
@@ -46,7 +43,6 @@ class App extends Component<Props, State> {
   }
 
   render() {
-    console.log(this.state);
     const handleHide = (i: number) => {
       const pictures = [...this.state.pictures];
       pictures[i].visible = false;
@@ -60,7 +56,7 @@ class App extends Component<Props, State> {
         key={i}
         height="300"
         onClick={() => handleHide(i)}
-        style={{ display: visible ? "inline-block" : "none" }}
+        style={{ display: visible ? 'inline-block' : 'none' }}
       />
     ));
     return <div>{imgtags}</div>;
